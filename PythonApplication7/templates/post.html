@@ -1,0 +1,40 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+<h2>{{item.title}}</h2>
+<div>
+    Автор - {{item.user.name}}, Дата написания - {{item.created_date}}
+</div>
+<div class="col-md6 border rounded">
+    <div>
+        {{item.content}}
+    </div>
+</div>
+<h2>Комментарии</h2>
+{% if session.get('user_id', -1) != -1 %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.text.label }}<br>
+        {{ form.text(class="form-control", type="text") }}
+        {% for error in form.text.errors %}
+    <p class="alert alert-danger" role="alert">
+        {{ error }}
+    </p>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {{message}}
+</form>
+{% endif %}
+{% for t in comments[::-1] %}
+<div class="col-md6 border rounded">
+    <div>
+        Автор - {{t.user.name}}, Дата написания - {{t.created_date}}
+    </div>
+    <div>
+        {{t.content}}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
