@@ -41,6 +41,7 @@
     <Folder Include="static\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\messages.py" />
     <Content Include="forms\post.py" />
     <Content Include="templates\base.html" />
     <Content Include="templates\index.html" />

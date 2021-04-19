@@ -27,6 +27,7 @@ def global_init(db_file):
     from . import users
     from . import posts
     from . import comments
+    from . import messages
 
     SqlAlchemyBase.metadata.create_all(engine)
     
