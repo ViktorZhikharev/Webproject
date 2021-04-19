@@ -46,6 +46,7 @@
     <Content Include="templates\base.html" />
     <Content Include="templates\index.html" />
     <Content Include="templates\login.html" />
+    <Content Include="templates\messages.html" />
     <Content Include="templates\newpost.html" />
     <Content Include="templates\post.html" />
     <Content Include="templates\register.html" />

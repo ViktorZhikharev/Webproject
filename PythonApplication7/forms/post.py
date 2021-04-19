@@ -11,3 +11,7 @@ class PostForm(FlaskForm):
 class CommentForm(FlaskForm):
     text = TextAreaField('Введите текст зесь', validators=[DataRequired()])
     submit = SubmitField('Запостить')
+
+class MessageForm(FlaskForm):
+    text = TextAreaField('Введите текст зесь', validators=[DataRequired()])
+    submit = SubmitField('Написать сообщение')

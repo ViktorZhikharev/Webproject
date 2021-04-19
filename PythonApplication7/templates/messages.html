@@ -1,17 +1,8 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
-<h2>{{item.title}}</h2>
-<div>
-    Автор - {{item.user.name}}, Дата написания - {{item.created_date}}
-</div>
-<div class="col-md6 border rounded">
-    <div>
-        {{item.content}}
-    </div>
-</div>
-<h2>Комментарии</h2>
-{% if session.get('user_id', -1) != -1 %}
+<h2>{{title}}</h2>
+{% if session.get('user_id', -1) != id%}
 <form action="" method="post">
     {{ form.hidden_tag() }}
     <p>
@@ -27,7 +18,7 @@
     {{message}}
 </form>
 {% endif %}
-{% for t in comments[::-1] %}
+{% for t in msg[::-1] %}
 <div class="col-md6 border rounded">
     <div>
         Автор - <a href="/user/{{t.author}}">{{t.user.name}}</a>, Дата написания - {{t.created_date}}

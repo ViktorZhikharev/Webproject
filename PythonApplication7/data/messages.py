@@ -3,7 +3,7 @@ import sqlalchemy
 from sqlalchemy import orm
 from .db_session import SqlAlchemyBase
 
-class Comment(SqlAlchemyBase):
+class Message(SqlAlchemyBase):
     __tablename__ = 'messages'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, 
@@ -13,6 +13,5 @@ class Comment(SqlAlchemyBase):
                                      default=datetime.datetime.now)
     author = sqlalchemy.Column(sqlalchemy.Integer, 
                                     sqlalchemy.ForeignKey("users.id"))
-    reciever = sqlalchemy.Column(sqlalchemy.Integer, 
-                                    sqlalchemy.ForeignKey("users.id"))
+    reciever = sqlalchemy.Column(sqlalchemy.Integer)
     user = orm.relation('User')

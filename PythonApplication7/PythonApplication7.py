@@ -1,10 +1,11 @@
 from flask import Flask, redirect, render_template, session
 from data.users import User
 from forms.user import RegisterForm, LoginForm
-from forms.post import PostForm, CommentForm
+from forms.post import PostForm, CommentForm, MessageForm
 import data.db_session as db_session
 from data.posts import Post
 from data.comments import Comment
+from data.messages import Message
 
 
 db_session.global_init("db/socnet.db")
@@ -138,7 +139,7 @@ def newpost():
         return 'Error: user is not registered but logged in'
 
 
-@app.route('/user/<id>')
+@app.route('/user/<int:id>')
 def user(id):
     db_sess = db_session.create_session()
     news = db_sess.query(Post).filter(Post.author == id).all()
@@ -149,6 +150,35 @@ def user(id):
         username = 'pass'
     print(session.get('user_id'))
     return render_template("user.html", posts=news, user=user, username=username).replace('&lt;', '<').replace('&gt;', '>')
+
+@app.route('/msg/<int:id>', methods=['GET', 'POST'])
+def mess(id):
+    db_sess = db_session.create_session()
+    form = MessageForm()
+    if session.get('user_id', -1) == -1:
+        return redirect('/login')
+    elif not db_sess.query(User).filter(User.id == id).first():
+        return '''user not registred </br><a href="/">mainpage<a>'''
+    elif id == session.get('user_id'):
+        msg = db_sess.query(Message).filter(Message.reciever == id).all()
+        title='Входящие'
+    else:
+        title='Исходящие для ' + db_sess.query(User).filter(User.id == id).first().name
+        msg = db_sess.query(Message).filter(Message.reciever == id).filter(Message.author == session.get('user_id')).all()
+        if form.validate_on_submit():
+            message = Message(
+                content=form.text.data,
+                author=session.get('user_id'),
+                reciever = id)
+            db_sess.add(message)
+            db_sess.commit()
+            return redirect('/msg/' + str(id))
+    if session.get('user_id', -1) != -1:
+        username = db_sess.query(User).filter(User.id == session.get('user_id')).first().name
+    else:
+        username = 'pass'
+    print(session.get('user_id'))
+    return render_template("messages.html",title=title,id=id, form=form, msg=msg, username=username).replace('&lt;', '<').replace('&gt;', '>')
 
 
 def main():
