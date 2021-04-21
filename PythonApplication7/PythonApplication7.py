@@ -56,6 +56,33 @@ def reqister():
         return "<h1>You can't register new user while logged in</h1>"
 
 
+@app.route('/edit_user_info', methods=['GET', 'POST'])
+def reqister():
+    if session.get('user_id', -1) != -1:
+        form = RegisterForm()
+        if form.validate_on_submit():
+            if form.password.data != form.password_again.data:
+                return render_template('edit.html', title='Регистрация',
+                                       form=form,
+                                       message="Пароли не совпадают")
+            db_sess = db_session.create_session()
+            user = db_sess.query(User).filter(User.id == session.get('user_id')).first()
+            user.set_password(form.password.data)
+            user.name = form.name.data
+            user.birth = form.birth.data
+            user.phone = form.phone.data
+            db_sess.update(user)
+            db_sess.commit()
+            return redirect('/login')
+        if session.get('user_id', -1) != -1:
+            username = db_sess.query(User).filter(User.id == session.get('user_id')).first().name
+        else:
+            username = 'pass'
+        return render_template('register.html', title='Регистрация', form=form, username=username)
+    else:
+        return redirect('/register')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if session.get('user_id', -1) == -1:

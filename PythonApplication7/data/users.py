@@ -12,7 +12,6 @@ class User(SqlAlchemyBase, SerializerMixin):
                            primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     birth = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
-    friends = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     posts = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     phone = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, 
