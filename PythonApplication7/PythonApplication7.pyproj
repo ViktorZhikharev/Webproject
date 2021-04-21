@@ -26,6 +26,9 @@
     </Compile>
     <Compile Include="data\db_session.py" />
     <Compile Include="data\posts.py" />
+    <Compile Include="data\posts_api.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="data\users.py" />
     <Compile Include="data\__all_models.py" />
     <Compile Include="forms\user.py">
