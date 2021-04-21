@@ -173,7 +173,7 @@ def newpost():
             db_sess.add(post)
             db_sess.commit()
             return redirect('/')
-        return render_template('newpost.html', title='Новый пост', form=form, username=username, title='Создание поста').replace('&lt;', '<').replace('&gt;', '>')
+        return render_template('newpost.html', title='Новый пост', form=form, username=username).replace('&lt;', '<').replace('&gt;', '>')
     else:
         return 'Error: user is not registered but logged in'
 
