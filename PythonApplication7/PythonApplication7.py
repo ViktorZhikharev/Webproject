@@ -1,16 +1,25 @@
-from flask import Flask, redirect, render_template, session
+from flask import Flask, redirect, render_template, session, jsonify
 from data.users import User
 from forms.user import RegisterForm, LoginForm
 from forms.post import PostForm, CommentForm, MessageForm
 import data.db_session as db_session
+db_session.global_init("db/socnet.db")
+
 from data.posts import Post
 from data.comments import Comment
 from data.messages import Message
+from data import posts_api
+from flask import make_response
 
 
-db_session.global_init("db/socnet.db")
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'efbgdkl458690uy94fu309uwcu4985hj8903u809fubgadmkmdfaklbndflsmbklwetmkthnjmlwtj'
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -182,6 +191,7 @@ def mess(id):
 
 
 def main():
+    app.register_blueprint(posts_api.blueprint)
     app.run(port=8080)
 
 
