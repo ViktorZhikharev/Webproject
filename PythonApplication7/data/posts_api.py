@@ -2,6 +2,7 @@ import flask
 
 from . import db_session
 from .posts import Post
+from .comments import Comment
 
 blueprint = flask.Blueprint(
     'post_api',
@@ -26,12 +27,17 @@ def get_news():
 def get_one_news(post_id):
     db_sess = db_session.create_session()
     posts = db_sess.query(Post).get(post_id)
+    comments = db_sess.query(Comment).filter(Comment.parent == post_id).all()
     if not posts:
         return flask.jsonify({'error': 'Not found'})
     return flask.jsonify(
         {
-            'posts': posts.to_dict(only=(
-                'title', 'content', 'author'))
+            'post': posts.to_dict(only=(
+                'title', 'content', 'author')),
+            'comments':
+                [item.to_dict(only=('content', 'user.name')) 
+                 for item in comments]
+
         }
     )
 
@@ -50,5 +56,18 @@ def create_post():
         author=request.json['author'],
     )
     db_sess.add(post)
+    db_sess.commit()
+    return flask.jsonify({'success': 'OK'})
+
+@blueprint.route('/api/posts/<int:post_id>', methods=['DELETE'])
+def delete_post(post_id):
+    db_sess = db_session.create_session()
+    post = db_sess.query(Post).get(post_id)
+    if not post:
+        return flask.jsonify({'error': 'Not found'})
+    db_sess.delete(post)
+    comms = db_sess.query(Comment).filter(Comment.parent == post_id).all()
+    for u in comms:
+        db_sess.delete(u)
     db_sess.commit()
     return flask.jsonify({'success': 'OK'})

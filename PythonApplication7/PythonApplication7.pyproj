@@ -47,6 +47,7 @@
     <Content Include="data\messages.py" />
     <Content Include="forms\post.py" />
     <Content Include="templates\base.html" />
+    <Content Include="templates\edit.html" />
     <Content Include="templates\index.html" />
     <Content Include="templates\login.html" />
     <Content Include="templates\messages.html" />

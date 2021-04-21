@@ -57,28 +57,31 @@ def reqister():
 
 
 @app.route('/edit_user_info', methods=['GET', 'POST'])
-def reqister():
+def eri():
     if session.get('user_id', -1) != -1:
         form = RegisterForm()
+        db_sess = db_session.create_session()
         if form.validate_on_submit():
             if form.password.data != form.password_again.data:
                 return render_template('edit.html', title='Регистрация',
                                        form=form,
                                        message="Пароли не совпадают")
-            db_sess = db_session.create_session()
+            if form.name.data:
+                db_sess.query(User).filter(User.id == session.get('user_id')).update({'name': form.name.data})
+            if form.birth.data:
+                db_sess.query(User).filter(User.id == session.get('user_id')).update({'birth': form.birth.data})
+            if form.phone.data:
+                db_sess.query(User).filter(User.id == session.get('user_id')).update({'phone': form.phone.data})
             user = db_sess.query(User).filter(User.id == session.get('user_id')).first()
-            user.set_password(form.password.data)
-            user.name = form.name.data
-            user.birth = form.birth.data
-            user.phone = form.phone.data
-            db_sess.update(user)
+            if form.password.data:
+                user.set_password(form.password.data)
             db_sess.commit()
             return redirect('/login')
         if session.get('user_id', -1) != -1:
             username = db_sess.query(User).filter(User.id == session.get('user_id')).first().name
         else:
             username = 'pass'
-        return render_template('register.html', title='Регистрация', form=form, username=username)
+        return render_template('edit.html', title='Регистрация', form=form, username=username)
     else:
         return redirect('/register')
 
