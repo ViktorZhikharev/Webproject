@@ -63,7 +63,7 @@ def eri():
         db_sess = db_session.create_session()
         if form.validate_on_submit():
             if form.password.data != form.password_again.data:
-                return render_template('edit.html', title='Регистрация',
+                return render_template('edit.html', title='Редактирование профиля',
                                        form=form,
                                        message="Пароли не совпадают")
             if form.name.data:
@@ -81,7 +81,7 @@ def eri():
             username = db_sess.query(User).filter(User.id == session.get('user_id')).first().name
         else:
             username = 'pass'
-        return render_template('edit.html', title='Регистрация', form=form, username=username)
+        return render_template('edit.html', title='Редактирование профиля', form=form, username=username)
     else:
         return redirect('/register')
 
@@ -128,7 +128,7 @@ def index():
     else:
         username = 'pass'
     print(session.get('user_id'))
-    return render_template("index.html", posts=news, username=username).replace('&lt;', '<').replace('&gt;', '>')
+    return render_template("index.html", posts=news, username=username, title='ПроектСоцсеть').replace('&lt;', '<').replace('&gt;', '>')
 
 
 @app.route('/logout')
@@ -154,7 +154,7 @@ def post(id):
         db_sess.commit()
         return redirect('/post/' + str(id))
     comments = db_sess.query(Comment).filter(Comment.parent == id).all()
-    return render_template("post.html", item=item, comments=comments, form=form, username=username).replace('&lt;', '<').replace('&gt;', '>')
+    return render_template("post.html", item=item, comments=comments, form=form, username=username, title='Пост ' + item.title).replace('&lt;', '<').replace('&gt;', '>')
 
 
 @app.route('/newpost', methods=['GET', 'POST'])
@@ -173,7 +173,7 @@ def newpost():
             db_sess.add(post)
             db_sess.commit()
             return redirect('/')
-        return render_template('newpost.html', title='Новый пост', form=form, username=username).replace('&lt;', '<').replace('&gt;', '>')
+        return render_template('newpost.html', title='Новый пост', form=form, username=username, title='Создание поста').replace('&lt;', '<').replace('&gt;', '>')
     else:
         return 'Error: user is not registered but logged in'
 
@@ -188,7 +188,7 @@ def user(id):
     else:
         username = 'pass'
     print(session.get('user_id'))
-    return render_template("user.html", posts=news, user=user, username=username).replace('&lt;', '<').replace('&gt;', '>')
+    return render_template("user.html", posts=news, user=user, username=username, title=username).replace('&lt;', '<').replace('&gt;', '>')
 
 @app.route('/msg/<int:id>', methods=['GET', 'POST'])
 def mess(id):
