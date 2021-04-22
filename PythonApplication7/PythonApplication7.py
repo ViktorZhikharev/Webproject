@@ -1,9 +1,9 @@
 from flask import Flask, redirect, render_template, session, jsonify
 from data.users import User
-from forms.user import RegisterForm, LoginForm
+from forms.user import RegisterForm, LoginForm, EditForm
 from forms.post import PostForm, CommentForm, MessageForm
 import data.db_session as db_session
-db_session.global_init("db/socnet.db")
+db_session.global_init("/home/Qwertyer123/mysite/db/socnet.db")
 
 from data.posts import Post
 from data.comments import Comment
@@ -59,7 +59,7 @@ def reqister():
 @app.route('/edit_user_info', methods=['GET', 'POST'])
 def eri():
     if session.get('user_id', -1) != -1:
-        form = RegisterForm()
+        form = EditForm()
         db_sess = db_session.create_session()
         if form.validate_on_submit():
             if form.password.data != form.password_again.data:

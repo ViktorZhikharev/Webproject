@@ -15,7 +15,7 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Зарегистрироваться')
 
 
-class RegisterForm(FlaskForm):
+class EditForm(FlaskForm):
     password = PasswordField('Пароль', default=None)
     password_again = PasswordField('Повторите пароль', default=None)
     name = StringField('Имя пользователя', default=None)
